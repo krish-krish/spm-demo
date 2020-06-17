@@ -102,17 +102,6 @@
                 android:orientation="vertical">
 
 
-                <Spinner
-                    android:id="@+id/mode_spinner"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:entries="@array/tfe_ic_modes"
-                    android:foregroundGravity="center"
-                    android:gravity="left|center_vertical"
-                    android:prompt="@string/tfe_ic_mode"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Title"
-                    android:visibility="gone" />
-
                 <TextView
                     android:id="@+id/modeTextView"
                     android:layout_width="wrap_content"
@@ -131,6 +120,18 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:orientation="vertical">
+
+                <Spinner
+                    android:id="@+id/mode_spinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top|center_horizontal"
+                    android:entries="@array/tfe_ic_modes"
+                    android:foregroundGravity="center"
+                    android:gravity="left|center_vertical"
+                    android:prompt="@string/tfe_ic_mode"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                    android:visibility="gone" />
 
                 <RadioGroup
                     android:id="@+id/modeGroup"
@@ -537,11 +538,27 @@
             android:id="@+id/updateButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
+            android:layout_gravity="center"
             android:width="@android:dimen/app_icon_size"
             android:text="Update Model"
             android:textAppearance="@style/TextAppearance.AppCompat.Button" />
 
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.1"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/debug"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|right"
+            android:text="Debug"
+            android:textAppearance="@android:style/TextAppearance.Material.Notification.Time"
+            android:textSize="2sp" />
     </LinearLayout>
 
 

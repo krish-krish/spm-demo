@@ -249,6 +249,8 @@ public abstract class Classifier {
     gMode = mode.replaceAll(" ", "");
     // Loads labels out from the label file.
     labels = FileUtil.loadLabels(activity, getLabelPathDict().get(mode).toString());
+    LOGGER.d("loading dict : " + getLabelPathDict().get(mode).toString());
+
     L2Map = new Hashtable<String, String>();
     InputStream input;
     AssetManager assetManager = activity.getAssets();
@@ -259,11 +261,12 @@ public abstract class Classifier {
     input.close();
     // byte buffer into a string
     String text = new String(buffer);
+    //LOGGER.d("l2-map-string: " + text);
     String[] entries = text.split("\n");
     for(String entry: entries){
       L2Map.put(entry.split("\t")[0], entry.split("\t")[1]);
     }
-    LOGGER.d("L2Map:" + L2Map.get("othersAB") + L2Map.get("ostrich"));
+    //LOGGER.d("L2Map:" + L2Map.get("othersAB") + L2Map.get("ostrich"));
 
 
       //FEAT
@@ -292,10 +295,26 @@ public abstract class Classifier {
     // Reads type and shape of input and output tensors, respectively.
     int inFeatTensorIndex = 0;
     int[] inFeatShape = headA.tflite.getInputTensor(inFeatTensorIndex).shape(); // {1, height, width, 3}
-    LOGGER.d("Head: input shape: (%d, %d, %d, %d)", inFeatShape[0], inFeatShape[1], inFeatShape[2],
+    LOGGER.d("HeadA: input shape: (%d, %d, %d, %d)", inFeatShape[0], inFeatShape[1], inFeatShape[2],
             inFeatShape[3]);
-    headA.inputSizeX = headB.inputSizeX = headC.inputSizeX = inFeatShape[1];
-    headA.inputSizeY = headB.inputSizeY = headC.inputSizeY = inFeatShape[2];
+    headA.inputSizeX = inFeatShape[1];
+    headA.inputSizeY = inFeatShape[2];
+
+    inFeatTensorIndex = 0;
+    inFeatShape = headB.tflite.getInputTensor(inFeatTensorIndex).shape(); // {1, height, width, 3}
+    LOGGER.d("HeadB: input shape: (%d, %d, %d, %d)", inFeatShape[0], inFeatShape[1], inFeatShape[2],
+            inFeatShape[3]);
+    headB.inputSizeX = inFeatShape[1];
+    headB.inputSizeY = inFeatShape[2];
+
+    inFeatTensorIndex = 0;
+    inFeatShape = headC.tflite.getInputTensor(inFeatTensorIndex).shape(); // {1, height, width, 3}
+    LOGGER.d("HeadC: input shape: (%d, %d, %d, %d)", inFeatShape[0], inFeatShape[1], inFeatShape[2],
+            inFeatShape[3]);
+    headC.inputSizeX = inFeatShape[1];
+    headC.inputSizeY = inFeatShape[2];
+
+
     DataType inFeatDataType = headA.tflite.getInputTensor(inFeatTensorIndex).dataType();
 
     int probabilityTensorIndex = 0;
@@ -367,12 +386,14 @@ public abstract class Classifier {
     feat.inputImageBuffer = loadImage(bitmap, sensorOrientation);
 
     float[] values = feat.inputImageBuffer.getTensorBuffer().getFloatArray();
+    /*
     String s = "";
     for(int i = 0; i < 1000; i++) {
       s += String.valueOf(values[i]) + " ";
     }
 
     LOGGER.d("processed image: " + s);
+    */
 
     long endTimeForLoadImage = SystemClock.uptimeMillis();
     Trace.endSection();
@@ -438,7 +459,7 @@ public abstract class Classifier {
       newProbBuffer = TensorBuffer.createFixedSize(new_shape, headA.outputBuffer.getDataType());
       LOGGER.d("buffer shape %d, limit: %d", newProbBuffer.getShape()[0], newProbBuffer.getBuffer().limit());
       //LOGGER.d("temp buffer shape %d, limit: %d", new_buffer.capacity(), new_buffer.limit());
-      newProbBuffer = TensorBuffer.createFixedSize(new_shape, headA.outputBuffer.getDataType());
+      //newProbBuffer = TensorBuffer.createFixedSize(new_shape, headA.outputBuffer.getDataType());
       newProbBuffer.loadArray(src);
     }
     else if(gMode.equals("AC")) {
@@ -457,7 +478,7 @@ public abstract class Classifier {
       newProbBuffer = TensorBuffer.createFixedSize(new_shape, headA.outputBuffer.getDataType());
       LOGGER.d("buffer shape %d, limit: %d", newProbBuffer.getShape()[0], newProbBuffer.getBuffer().limit());
       //LOGGER.d("temp buffer shape %d, limit: %d", new_buffer.capacity(), new_buffer.limit());
-      newProbBuffer = TensorBuffer.createFixedSize(new_shape, headA.outputBuffer.getDataType());
+      //newProbBuffer = TensorBuffer.createFixedSize(new_shape, headA.outputBuffer.getDataType());
       newProbBuffer.loadArray(src);
     }
     else if(gMode.equals("BC")) {
@@ -480,7 +501,7 @@ public abstract class Classifier {
       newProbBuffer = TensorBuffer.createFixedSize(new_shape, headA.outputBuffer.getDataType());
       LOGGER.d("buffer shape %d, limit: %d", newProbBuffer.getShape()[0], newProbBuffer.getBuffer().limit());
       //LOGGER.d("temp buffer shape %d, limit: %d", new_buffer.capacity(), new_buffer.limit());
-      newProbBuffer = TensorBuffer.createFixedSize(new_shape, headA.outputBuffer.getDataType());
+      //newProbBuffer = TensorBuffer.createFixedSize(new_shape, headA.outputBuffer.getDataType());
       newProbBuffer.loadArray(src);
     }
     else {
@@ -521,7 +542,7 @@ public abstract class Classifier {
         newProbBuffer = TensorBuffer.createFixedSize(new_shape, headA.outputBuffer.getDataType());
         LOGGER.d("buffer shape %d, limit: %d", newProbBuffer.getShape()[0], newProbBuffer.getBuffer().limit());
         //LOGGER.d("temp buffer shape %d, limit: %d", new_buffer.capacity(), new_buffer.limit());
-        newProbBuffer = TensorBuffer.createFixedSize(new_shape, headA.outputBuffer.getDataType());
+        //newProbBuffer = TensorBuffer.createFixedSize(new_shape, headA.outputBuffer.getDataType());
         newProbBuffer.loadArray(src);
     }
 
@@ -601,7 +622,7 @@ public abstract class Classifier {
     for(int i = 0; i < src.length; i++) {
       c += String.valueOf(src[i]) + " ";
     }
-    //LOGGER.d("src: " + c);
+    LOGGER.d("src: " + c);
     */
 
     return src;

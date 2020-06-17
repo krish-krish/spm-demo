@@ -111,6 +111,7 @@ public abstract class CameraActivity extends AppCompatActivity
   private RadioButton fullButton;
   private TextView modeTextView;
   private Switch demoSwitch;
+  private Button debugButton;
 
 
   private Model model = Model.CUSTOM_EFFICIENTNET;
@@ -150,6 +151,7 @@ public abstract class CameraActivity extends AppCompatActivity
     modeTextView = findViewById(R.id.modeTextView);
     demoSwitch = findViewById(R.id.demoSwitch);
     modeGroup = findViewById(R.id.modeGroup);
+    debugButton = findViewById(R.id.debug);
 
 
     /*
@@ -225,7 +227,7 @@ public abstract class CameraActivity extends AppCompatActivity
     liteButton.setOnClickListener(this);
     updateButton.setOnClickListener(this);
     fullButton.setOnClickListener(this);
-
+    debugButton.setOnClickListener(this);
 
     model = Model.valueOf(modelSpinner.getSelectedItem().toString().toUpperCase());
     mode = modeSpinner.getSelectedItem().toString().toUpperCase();
@@ -710,6 +712,28 @@ public abstract class CameraActivity extends AppCompatActivity
       fullButton.setChecked(true);
       this.mode = "ABC";
       onInferenceConfigurationChanged();
+    }
+    else if(v.getId() == R.id.debug) {
+      LOGGER.d("debug pressed: " + debugButton.getText());
+      if(debugButton.getText().equals("Debug")) {
+        modeGroup.setVisibility(View.GONE);
+        modeGroup.check(R.id.lite);
+        modeSpinner.setVisibility(View.VISIBLE);
+        updateButton.setVisibility(View.GONE);
+        debugButton.setText("Demo");
+        this.mode = "AB";
+        onInferenceConfigurationChanged();
+      }
+      else {
+        modeGroup.setVisibility(View.VISIBLE);
+        modeSpinner.setVisibility(View.GONE);
+        updateButton.setVisibility(View.VISIBLE);
+        modeSpinner.setPrompt("AB");
+        this.mode = "AB";
+        debugButton.setText("Debug");
+        onInferenceConfigurationChanged();
+
+      }
     }
   }
 
