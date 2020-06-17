@@ -115,7 +115,7 @@ public abstract class Classifier {
   /** Labels corresponding to the output of the vision model. */
   private List<String> labels;
   public static Dictionary<String, String> L2Map;
-  public String gMode = "ABC";
+  public String gMode = "AB";
 
   /** Input image TensorBuffer. */
   //private TensorImage inputImageBuffer;
@@ -365,6 +365,15 @@ public abstract class Classifier {
     LOGGER.v("recognizeImage(E): Loading image");
     long startTimeForLoadImage = SystemClock.uptimeMillis();
     feat.inputImageBuffer = loadImage(bitmap, sensorOrientation);
+
+    float[] values = feat.inputImageBuffer.getTensorBuffer().getFloatArray();
+    String s = "";
+    for(int i = 0; i < 1000; i++) {
+      s += String.valueOf(values[i]) + " ";
+    }
+
+    LOGGER.d("processed image: " + s);
+
     long endTimeForLoadImage = SystemClock.uptimeMillis();
     Trace.endSection();
     LOGGER.d("Timecost to load the image: " + (endTimeForLoadImage - startTimeForLoadImage));

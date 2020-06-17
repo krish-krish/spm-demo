@@ -11,13 +11,13 @@
         <item>Float_MobileNet</item>
     </string-array>
     <string-array name="tfe_ic_modes" translatable="false">
+        <item>AB</item>
+        <item>BC</item>
+        <item>AC</item>
         <item>ABC</item>
         <item>A</item>
         <item>B</item>
         <item>C</item>
-        <item>AB</item>
-        <item>BC</item>
-        <item>AC</item>
     </string-array>
 
     <string name="tfe_ic_device" translatable="false">Device:</string>
